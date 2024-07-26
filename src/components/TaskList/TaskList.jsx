@@ -11,8 +11,12 @@ function TaskList({ todos = [], handleToggleComplete, handleDelete }) {
             </div>
             <div className="task-list-items">
                 {todos.length > 0 ? (
-                    todos.map(todo => (
-                        <div className="task-item" key={todo.id}>
+                    todos.map((todo, index) => (
+                        <div
+                            className="task-item"
+                            key={todo.id}
+                            
+                        >
                             <input
                                 type="checkbox"
                                 checked={todo.isCompleted}
@@ -22,13 +26,13 @@ function TaskList({ todos = [], handleToggleComplete, handleDelete }) {
                                 {todo.title}
                             </span>
                             <button onClick={() => handleDelete(todo.id)}>
-                                <FaTrashAlt />
+                                <FaTrashAlt size={17} />
                             </button>
                         </div>
                     ))
                 ) : (
                     <div className="task-list-items-empty">
-                        <p>No tasks available.</p>
+                        
                     </div>
                 )}
             </div>
