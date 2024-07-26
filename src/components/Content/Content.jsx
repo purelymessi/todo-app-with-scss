@@ -7,30 +7,27 @@ function Content() {
     const [todos, setTodos] = useState([]);
 
     function addTodo(value) {
-        if (value.trim()) {
-            const newTodo = {
-                id: Math.random(),
-                title: value,
-                isCompleted: false,
-            };
-            setTodos([...todos, newTodo]);
-        }
+        setTodos([...todos, {
+            id: todos.length,
+            title: value,
+            isCompleted: false,
+        }]);
     }
 
-    function removeTask(id) {
-        setTodos(todos.filter(todo => todo.id !== id));
-    }
-
-    function toggleTask(id) {
+    function handleToggleComplete(id) {
         setTodos(todos.map(todo =>
             todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
         ));
     }
 
+    function handleDelete(id) {
+        setTodos(todos.filter(todo => todo.id !== id));
+    }
+
     return (
         <div className="content">
             <InputForm handleAddTodo={addTodo} />
-            <TaskList todos={todos} removeTask={removeTask} toggleTask={toggleTask} />
+            <TaskList todos={todos} handleToggleComplete={handleToggleComplete} handleDelete={handleDelete} />
         </div>
     );
 }

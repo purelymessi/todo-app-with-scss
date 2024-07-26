@@ -1,34 +1,54 @@
-import React from "react";
+import { useState } from 'react';
 import "./TaskList.scss";
+import { FaTrashAlt } from "react-icons/fa";
 
-function TaskList({ todos, removeTask, toggleTask }) {
+function TaskList({ todos = [], handleToggleComplete, handleDelete }) {
+    const [showCompleted, setShowCompleted] = useState(false);
+
+    const currentTodos = todos.filter(todo => !todo.isCompleted);
+    const completedTodos = todos.filter(todo => todo.isCompleted);
+
     return (
         <div className="task-list container">
-            <div className="task-list-top">
-                <h1>Current</h1>
-                <h1>Completed</h1>
+            <div className="task-list-header">
+                <div
+                    className={`task-header ${!showCompleted ? 'active' : ''}`}
+                    onClick={() => setShowCompleted(true)}
+                >
+                    <h2>Current</h2>
+                    <span className="task-count">{currentTodos.length}</span>
+                </div>
+                <div
+                    className={`task-header ${showCompleted ? 'active' : ''}`}
+                    onClick={() => setShowCompleted(true)}
+                >
+                    <h2>Completed</h2>
+                    <span className="task-count">{completedTodos.length}</span>
+                </div>
             </div>
-            {todos && todos.length > 0 ? (
-                <div className="task-list-items">
-                    {todos.map((todo) => (
-                        <div key={todo.id} className="task-item">
-                            <input 
-                                type="checkbox" 
-                                checked={todo.isCompleted} 
-                                onChange={() => toggleTask(todo.id)}
+            <div className="task-list-items">
+                {(!showCompleted ? currentTodos : completedTodos).length > 0 ? (
+                    (!showCompleted ? currentTodos : completedTodos).map((todo) => (
+                        <div className="task-item" key={todo.id}>
+                            <input
+                                type="checkbox"
+                                checked={todo.isCompleted}
+                                onChange={() => handleToggleComplete(todo.id)}
                             />
                             <span className={todo.isCompleted ? "completed" : ""}>
                                 {todo.title}
                             </span>
-                            <button onClick={() => removeTask(todo.id)}>Delete</button>
+                            <button onClick={() => handleDelete(todo.id)}>
+                                <FaTrashAlt />
+                            </button>
                         </div>
-                    ))}
-                </div>
-            ) : (
-                <div className="task-list-items task-list-items-empty">
-                    <p>The ToDo list is empty. Please add tasks to be done. Organized life with todo.</p>
-                </div>
-            )}
+                    ))
+                ) : (
+                    <div className="task-list-items-empty">
+                        <p>{!showCompleted ? "No current tasks." : "No completed tasks."}</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
